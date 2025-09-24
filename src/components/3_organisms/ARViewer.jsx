@@ -1,73 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ARScene from "./ARScene";
 import InfoCard from "../2_molecules/InfoCard";
+
 const arContent = [
   {
-    id: "resistor",
-    markerType: "preset", // Tipe marker bawaan
-    markerValue: "hiro", // Nama preset
+    targetIndex: 0,
     modelPath: "/assets/models/resistor.glb",
     title: "Resistor",
-    description: "Resistor adalah komponen elektronik pasif yang memiliki nilai resistansi untuk membatasi arus listrik.",
+    description: "Resistor adalah komponen elektronik pasif...",
   },
   {
-    id: "kapasitor",
-    markerType: "pattern", // Tipe marker kustom
-    markerValue: "/assets/markers/resistor.patt", // Path ke file .patt
-    modelPath: "/assets/models/resistor.glb", // Ganti dengan model kapasitor Anda
+    targetIndex: 1,
+    modelPath: "/assets/models/kapasitor.glb",
     title: "Kapasitor",
-    description: "Kapasitor adalah komponen yang dapat menyimpan muatan listrik sementara.",
+    description: "Kapasitor adalah komponen yang dapat menyimpan muatan...",
   },
 ];
 
 export default function ARViewer() {
+  const containerRef = useRef(null);
   const [activeContent, setActiveContent] = useState(null);
+  const [arAnchor, setArAnchor] = useState(null);
 
-  // State untuk menangani event dari a-frame
   useEffect(() => {
-    const handleMarkerFound = (event) => {
-      const markerId = event.target.id;
-      const foundContent = arContent.find((content) => content.id === markerId);
-      setActiveContent(foundContent);
+    let mindarThree;
+
+    const startAR = async () => {
+      mindarThree = new window.MINDAR.IMAGE.MindARThree({
+        container: containerRef.current,
+        imageTargetSrc: "/assets/markers/targets.mind",
+      });
+
+      const { renderer, scene, camera } = mindarThree;
+
+      const anchor = mindarThree.addAnchor(0);
+      setArAnchor(anchor);
+
+      anchor.onTargetFound = () => {
+        const foundContent = arContent.find((c) => c.targetIndex === 0);
+        setActiveContent(foundContent);
+      };
+      anchor.onTargetLost = () => setActiveContent(null);
+
+      await mindarThree.start();
+
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
     };
 
-    const handleMarkerLost = () => {
-      setActiveContent(null);
-    };
-
-    // Mendaftarkan event listener ke semua marker
-    document.querySelectorAll("a-marker").forEach((marker) => {
-      marker.addEventListener("markerFound", handleMarkerFound);
-      marker.addEventListener("markerLost", handleMarkerLost);
-    });
+    startAR();
 
     return () => {
-      // Membersihkan event listener saat komponen di-unmount
-      document.querySelectorAll("a-marker").forEach((marker) => {
-        marker.removeEventListener("markerFound", handleMarkerFound);
-        marker.removeEventListener("markerLost", handleMarkerLost);
-      });
+      if (mindarThree && mindarThree.controller) {
+        mindarThree.stop();
+      }
     };
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;" embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-        {arContent.map((content) => (
-          <a-marker
-            key={content.id}
-            id={content.id}
-            type={content.markerType}
-            preset={content.markerType === "preset" ? content.markerValue : undefined}
-            url={content.markerType === "pattern" ? content.markerValue : undefined}
-            emitevents="true"
-          >
-            <a-entity gltf-model={`url(${content.modelPath})`} scale="0.05 0.05 0.05" position="0 0.5 0" rotation="0 0 0"></a-entity>
-          </a-marker>
-        ))}
-        <a-entity camera></a-entity>
-      </a-scene>
+    <div ref={containerRef} className="relative w-screen h-screen overflow-hidden">
+      {activeContent && arAnchor && <ARScene modelPath={activeContent.modelPath} anchor={arAnchor} />}
 
-      {/* Overlay UI (InfoCard) */}
       {activeContent && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-11/12 max-w-sm z-10">
           <InfoCard title={activeContent.title} description={activeContent.description} />
