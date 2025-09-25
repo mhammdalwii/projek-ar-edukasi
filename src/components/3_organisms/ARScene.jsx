@@ -18,10 +18,7 @@ export default function ARScene({ controller, anchors, arContent }) {
 
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
-
-    // Loop melalui anchors yang sudah dibuat otomatis oleh MindAR
     anchors.forEach((anchor) => {
-      // Cari konten yang sesuai berdasarkan targetIndex dari anchor
       const content = arContent.find((c) => c.targetIndex === anchor.targetIndex);
       if (content) {
         const loader = new GLTFLoader();
@@ -29,7 +26,7 @@ export default function ARScene({ controller, anchors, arContent }) {
           const model = gltf.scene;
           model.scale.set(0.1, 0.1, 0.1);
           model.position.set(0, 0, 0);
-          anchor.group.add(model); // Tambahkan model ke group di dalam anchor
+          anchor.group.add(model);
         });
       }
     });
