@@ -23,21 +23,16 @@ export default function TentangPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Ganti informasi di bawah ini dengan data Anda */}
-          <ProfileCard
-            name="[Nama Anda]"
-            role="Pengembang"
-            nim="[NIM Anda]"
-            email="[Email Anda]"
-            photoUrl="/assets/images/foto_anda.jpg" // Sediakan foto Anda di folder public
-            socialLinks={{ github: "https://github.com/[username_anda]" }}
-          />
+          <ProfileCard name="Nia Dahniar" role="Pengembang" nim="210206500009" email="niadahniar988@gmail.com" photoUrl="/assets/images/foto_anda.jpg" />
+
+          <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="[NIP/NIDN Pembimbing]" photoUrl="/assets/images/foto_pembimbing.jpg" />
 
           <ProfileCard
-            name="[Nama Pembimbing]"
-            role="Pembimbing"
-            nim="[NIP/NIDN Pembimbing]"
-            email="[Email Pembimbing]"
-            photoUrl="/assets/images/foto_pembimbing.jpg" // Sediakan foto pembimbing
+            name="Mustamin, S.Pd., M.T., M.Pd."
+            role="Pembimbing 2"
+            nim="-
+          "
+            photoUrl="/assets/images/foto_pembimbing2.jpg"
           />
         </div>
       </main>
