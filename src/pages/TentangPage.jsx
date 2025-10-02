@@ -30,7 +30,7 @@ export default function TentangPage() {
           <ProfileCard
             name="Mustamin, S.Pd., M.T., M.Pd."
             role="Pembimbing 2"
-            nim="-
+            nim="belum ada
           "
             photoUrl="/assets/images/foto_pembimbing2.jpg"
           />
