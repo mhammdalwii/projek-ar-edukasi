@@ -5,6 +5,8 @@ import MateriPage from "./pages/Materi/MateriPage";
 import StandarKompetensiPage from "./pages/StandarKompetensiPage";
 import MateriDetailPage from "./pages/Materi/MateriDetailPage";
 import SoalPage from "./pages/SoalPage";
+import PetunjukPage from "./pages/PetunjukPage";
+import TentangPage from "./pages/TentangPage";
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +17,8 @@ function App() {
         <Route path="/materi/:materiId" element={<MateriDetailPage />} />
         <Route path="/standar-kompetensi" element={<StandarKompetensiPage />} />
         <Route path="/soal" element={<SoalPage />} />
-        {/* <Route path="/tentang" element={<TentangPage />} /> */}
+        <Route path="/petunjuk" element={<PetunjukPage />} />
+        <Route path="/tentang" element={<TentangPage />} />
       </Routes>
     </BrowserRouter>
   );
