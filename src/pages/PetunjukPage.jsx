@@ -9,7 +9,7 @@ export default function PetunjukPage() {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header */}
-      <header className="bg-gray-700 text-white p-4 shadow-md flex items-center">
+      <header className="bg-emerald-600 text-white p-4 shadow-md flex items-center">
         <Link to="/" className="mr-4 text-2xl">
           <IoArrowBack />
         </Link>

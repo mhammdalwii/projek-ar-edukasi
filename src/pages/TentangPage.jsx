@@ -6,7 +6,7 @@ export default function TentangPage() {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Header */}
-      <header className="bg-gray-700 text-white p-4 shadow-md flex items-center">
+      <header className="bg-emerald-600 text-white p-4 shadow-md flex items-center">
         <Link to="/" className="mr-4 text-2xl">
           <IoArrowBack />
         </Link>
@@ -22,16 +22,16 @@ export default function TentangPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          <ProfileCard name="Nia Dahniar" role="Pengembang" nim="210206500009" email="niadahniar988@gmail.com" photoUrl="/assets/images/foto_anda.jpg" />
+          <ProfileCard name="Nia Dahniar" role="Pengembang" nim="210206500009" email="niadahniar988@gmail.com" photoUrl="/assets/images/niar.jpg" />
 
-          <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="[NIP/NIDN Pembimbing]" photoUrl="/assets/images/foto_pembimbing.jpg" />
+          <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="[NIP/NIDN Pembimbing]" photoUrl="/assets/images/pembimbing1.jpg" />
 
           <ProfileCard
             name="Mustamin, S.Pd., M.T., M.Pd."
             role="Pembimbing 2"
             nim="belum ada
           "
-            photoUrl="/assets/images/foto_pembimbing2.jpg"
+            photoUrl="/assets/images/pembimbing2.jpg"
           />
         </div>
       </main>

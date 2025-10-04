@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import MenuButton from "../2_molecules/MenuButton";
 import { FaBook, FaClipboardList, FaQuestionCircle, FaMicrochip, FaUserFriends } from "react-icons/fa";
-import { IoIosPower } from "react-icons/io";
-
 export default function MainMenuGrid() {
   const navigate = useNavigate();
 
@@ -21,13 +19,6 @@ export default function MainMenuGrid() {
         {menuItems.map((item, index) => (
           <MenuButton key={index} IconComponent={item.icon} text={item.text} bgColor={item.color} onClick={() => navigate(item.path)} />
         ))}
-      </div>
-
-      <div className="flex justify-end mt-6">
-        {/* Menggunakan warna merah default */}
-        <button className="bg-red-600 p-3 rounded-lg text-white shadow-md hover:opacity-90 transition-opacity">
-          <IoIosPower size={32} />
-        </button>
       </div>
     </div>
   );

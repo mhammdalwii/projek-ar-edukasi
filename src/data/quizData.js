@@ -7,7 +7,7 @@ export const quizData = [
       "Komponen yang tidak memiliki kemampuan untuk mengontrol aliran arus listrik dan tidak membutuhkan sumber energi eksternal ",
       "Komponen yang dapat menyimpan dan menyebarkan energi tanpa sumber eksternal ",
     ],
-    correctAnswer: "Komponen yang membutuhkan sumber energi eksternal untuk beroperasi dan dapat mengontrol aliran arus listrik ",
+    correctAnswer: "Komponen yang membutuhkan sumber energi eksternal untuk beroperasi dan dapat mengontrol aliran arus listrik",
     explanation: "Komponen aktif, seperti transistor dan dioda, memerlukan sumber energi eksternal untuk berfungsi dan memiliki kemampuan untuk mengontrol aliran arus listrik.",
   },
   {
@@ -19,7 +19,7 @@ export const quizData = [
   {
     question: "Berdasarkan teks, manakah yang merupakan salah satu fungsi utama dari komponen pasif",
     options: ["Mengendalikan energi dalam suatu rangkaian", "Menyimpan atau menyebarkan energi", "Memperkuat atau memodulasi sinyal listrik", "Mengubah sinyal listrik menjadi sinyal lain "],
-    correctAnswer: "Menyimpan atau menyebarkan energi ",
+    correctAnswer: "Menyimpan atau menyebarkan energi",
     explanation: "Komponen pasif, seperti resistor, kapasitor, dan induktor, berfungsi untuk menyimpan atau menyebarkan energi dalam suatu rangkaian tanpa mengontrol aliran arus listrik.",
   },
   {
@@ -28,7 +28,7 @@ export const quizData = [
       "Resistor metal, resistor karbon, dan resistor kawat",
       "Resistor tetap, resistor semi-variabel, dan resistor film",
       "Resistor linier, resistor non-linier, dan resistor foto",
-      "Resistor tetap, resistor variabel, dan resistor khusus ",
+      "Resistor tetap, resistor variabel, dan resistor khusus",
     ],
     correctAnswer: "Resistor tetap, resistor variabel, dan resistor khusus ",
     explanation: "Macam-macam resistor meliputi resistor tetap, resistor variabel, dan resistor khusus, yang masing-masing memiliki karakteristik dan aplikasi yang berbeda dalam rangkaian elektronik.",
