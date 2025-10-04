@@ -22,7 +22,6 @@ export default function TentangPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {/* Ganti informasi di bawah ini dengan data Anda */}
           <ProfileCard name="Nia Dahniar" role="Pengembang" nim="210206500009" email="niadahniar988@gmail.com" photoUrl="/assets/images/foto_anda.jpg" />
 
           <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="[NIP/NIDN Pembimbing]" photoUrl="/assets/images/foto_pembimbing.jpg" />
