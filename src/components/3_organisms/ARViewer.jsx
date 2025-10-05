@@ -9,6 +9,13 @@ const arContent = [
     title: "Resistor",
     description: "Resistor adalah komponen elektronik pasif...",
   },
+  {
+    targetIndex: 1,
+    modelPath: "/assets/models/kapasitor3.glb",
+    title: "Kapasitor",
+    description: "Kapasitor adalah komponen listrik yang digunakan untuk menyimpan muatan listrik...",
+  },
+  {},
 ];
 
 export default function ARViewer() {
