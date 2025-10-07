@@ -15,6 +15,30 @@ const arContent = [
     title: "Kapasitor",
     description: "Kapasitor adalah komponen listrik yang digunakan untuk menyimpan muatan listrik...",
   },
+  {
+    targetIndex: 2,
+    modelPath: "/assets/models/induktor.glb",
+    title: "Induktor",
+    description: "Induktor adalah komponen pasif yang menyimpan energi dalam bentuk medan magnet...",
+  },
+  {
+    targetIndex: 3,
+    modelPath: "/assets/models/dioda.glb",
+    title: "Dioda",
+    description: "Dioda adalah komponen elektronik yang memungkinkan arus listrik mengalir hanya dalam satu arah...",
+  },
+  {
+    targetIndex: 4,
+    modelPath: "/assets/models/transistor.glb",
+    title: "Transistor",
+    description: "Transistor adalah komponen semikonduktor yang digunakan untuk memperkuat atau mengalihkan sinyal elektronik...",
+  },
+  {
+    targetIndex: 5,
+    modelPath: "/assets/models/integrated_circuit.glb",
+    title: "IC (Integrated Circuit)",
+    description: "IC adalah rangkaian elektronik miniatur yang menggabungkan banyak komponen seperti transistor, resistor, dan kapasitor dalam satu chip...",
+  },
   {},
 ];
 
@@ -24,7 +48,7 @@ export default function ARViewer() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cameraStatus, setCameraStatus] = useState("Menginisialisasi kamera...");
-  const [cameraMode, setCameraMode] = useState("environment"); // 'environment' = belakang, 'user' = depan
+  const [cameraMode, setCameraMode] = useState("environment");
   const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
 
   useEffect(() => {
