@@ -11,7 +11,7 @@ const arContent = [
   },
   {
     targetIndex: 1,
-    modelPath: "/assets/models/kapasitor3.glb",
+    modelPath: "/assets/models/capasitor.glb",
     title: "Kapasitor",
     description: "Kapasitor adalah komponen listrik yang digunakan untuk menyimpan muatan listrik...",
   },
@@ -39,7 +39,6 @@ const arContent = [
     title: "IC (Integrated Circuit)",
     description: "IC adalah rangkaian elektronik miniatur yang menggabungkan banyak komponen seperti transistor, resistor, dan kapasitor dalam satu chip...",
   },
-  {},
 ];
 
 export default function ARViewer() {
@@ -108,6 +107,10 @@ export default function ARViewer() {
 
         // 🔑 Buat anchor untuk setiap target
         arContent.forEach((content) => {
+          if (content.targetIndex === undefined || !content.modelPath) {
+            console.warn("Melewatkan item arContent yang tidak lengkap:", content);
+            return; 
+          }
           const anchor = mindarThree.addAnchor(content.targetIndex);
 
           gltfLoader.load(
