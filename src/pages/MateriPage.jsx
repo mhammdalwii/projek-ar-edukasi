@@ -14,11 +14,11 @@ export default function MateriPage() {
         <h1 className="text-xl font-bold">Materi Pembelajaran</h1>
       </header>
 
-      {/* 🔹 Konten utama */}
+      {/*  Konten utama */}
       <main className="flex-grow">
         <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(PDF_FILE_URL)}&embedded=true`} title="Materi Pembelajaran PDF" className="w-full h-full border-none" />
 
-        {/* 🔹 Fallback link jika iframe gagal */}
+        {/* Fallback link jika iframe gagal */}
         <p className="text-center text-sm mt-2 text-gray-600">
           Jika PDF tidak tampil,{" "}
           <a href={PDF_FILE_URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
