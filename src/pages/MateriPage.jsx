@@ -1,62 +1,65 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack, IoDownload, IoDocument } from "react-icons/io5";
 
-const PDF_FILE_URL = "https://pembelajaranar.my.id/assets/pdf/materi_elektronika.pdf";
+const PDF_FILE_PATH = "/assets/pdf/materi_elektronika.pdf";
 
 export default function MateriPage() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // Deteksi perangkat mobile
-    const checkMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
-    setIsMobile(checkMobile);
-
-    // Jika di mobile, langsung buka di tab baru
-    if (checkMobile) {
-      window.open(PDF_FILE_URL, "_blank");
-    }
-  }, []);
+  const fullPdfUrl = `${window.location.origin}${PDF_FILE_PATH}`;
 
   return (
-    <div className="bg-gray-100 h-screen flex flex-col">
-      {/* 🔹 Header */}
-      <header className="bg-gray-700 text-white p-4 shadow-md flex items-center flex-shrink-0">
-        <Link to="/" className="mr-4 text-2xl">
-          <IoArrowBack />
-        </Link>
-        <h1 className="text-xl font-bold">Materi Pembelajaran</h1>
+    <div className="bg-gray-50 min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-gray-800 text-white p-4 shadow-lg">
+        <div className="container mx-auto flex items-center">
+          <Link to="/" className="mr-4 text-2xl hover:bg-gray-700 p-2 rounded-lg transition duration-200">
+            <IoArrowBack />
+          </Link>
+          <h1 className="text-xl font-bold">Materi Pembelajaran Elektronika</h1>
+        </div>
       </header>
 
-      {/* 🔹 Konten utama */}
-      <main className="flex-grow relative">
-        {!isMobile ? (
-          <>
-            {/* Desktop viewer */}
-            <embed src={PDF_FILE_URL} type="application/pdf" className="w-full h-full border-none" />
-            <div className="absolute bottom-4 w-full text-center">
-              <p className="text-sm text-gray-600 bg-gray-100/80 inline-block px-4 py-2 rounded-md shadow">
-                Jika PDF tidak tampil,&nbsp;
-                <a href={PDF_FILE_URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                  klik di sini untuk melihat langsung
-                </a>
-              </p>
+      {/* Main Content */}
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          {/* File Card */}
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+            <div className="bg-blue-500 p-6 text-white">
+              <div className="flex items-center">
+                <IoDocument className="text-4xl mr-4" />
+                <div>
+                  <h2 className="text-2xl font-bold">Materi Elektronika</h2>
+                  <p className="text-blue-100">File PDF - Materi Pembelajaran</p>
+                </div>
+              </div>
             </div>
-          </>
-        ) : (
-          // Mobile fallback
-          <div className="flex items-center justify-center h-full text-center px-4">
-            <p className="text-gray-700 text-sm bg-white p-4 rounded shadow-md">
-              📱 Materi sedang dibuka di tab baru.
-              <br />
-              Jika tidak otomatis terbuka,{" "}
-              <a href={PDF_FILE_URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                klik di sini
-              </a>
-              .
-            </p>
+
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Download Button */}
+                <a
+                  href={PDF_FILE_PATH}
+                  download="materi_elektronika.pdf"
+                  className="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg font-semibold transition duration-200 transform hover:scale-105"
+                >
+                  <IoDownload className="mr-3 text-xl" />
+                  Download PDF
+                </a>
+
+                {/* Open in New Tab */}
+                <a
+                  href={fullPdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-4 rounded-lg font-semibold transition duration-200 transform hover:scale-105"
+                >
+                  <span className="mr-3">📄</span>
+                  Buka di Browser
+                </a>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
