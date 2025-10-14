@@ -10,7 +10,7 @@ export default function MateriPage() {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-gray-800 text-white p-4 shadow-lg">
+      <header className="bg-emerald-600 text-white p-4 shadow-lg">
         <div className="container mx-auto flex items-center">
           <Link to="/" className="mr-4 text-2xl hover:bg-gray-700 p-2 rounded-lg transition duration-200">
             <IoArrowBack />
