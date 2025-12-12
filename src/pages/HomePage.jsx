@@ -13,7 +13,7 @@ export default function HomePage() {
       <div className="w-full max-w-md mx-auto">
         <header className="flex items-center space-x-2 p-4">
           <Logo />
-          <div className="bg-gray-700 text-white font-semibold py-2 px-4 rounded-md shadow-md border-2 border-cyan-400">AR DASAR ELEKTRONIKA</div>
+          <div className="bg-gray-700 text-white font-semibold py-2 px-4 rounded-md shadow-md border-2 border-cyan-400">AR DASAR ELEKTRONIKA TEKNIK</div>
         </header>
         <main className="flex flex-col items-center mt-4">
           {/* Menggunakan text-gray-800 */}

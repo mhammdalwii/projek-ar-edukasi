@@ -1,313 +1,241 @@
-import React, { useEffect, useRef, useState } from "react";
+/* eslint-disable no-unused-vars */
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import AROverlay from "./AROverlay";
+import InfoCard from "../2_molecules/InfoCard";
 
+// Data Model
 const arContent = [
   {
     targetIndex: 0,
     modelPath: "/assets/models/resistor3.glb",
     title: "Resistor",
-    description: "Resistor adalah komponen elektronik pasif...",
+    description: "Komponen elektronik pasif untuk menghambat aliran arus listrik.",
   },
   {
     targetIndex: 1,
     modelPath: "/assets/models/capasitor.glb",
     title: "Kapasitor",
-    description: "Kapasitor adalah komponen listrik yang digunakan untuk menyimpan muatan listrik...",
+    description: "Kapasitor adalah komponen listrik yang digunakan untuk menyimpan muatan listrik.",
   },
   {
     targetIndex: 2,
     modelPath: "/assets/models/induktor.glb",
     title: "Induktor",
-    description: "Induktor adalah komponen pasif yang menyimpan energi dalam bentuk medan magnet...",
+    description: "Induktor adalah komponen pasif yang menyimpan energi dalam bentuk medan magnet.",
   },
   {
     targetIndex: 3,
-    modelPath: "/assets/models/dioda.glb",
+    modelPath: "/assets/models/dioda1.glb",
     title: "Dioda",
-    description: "Dioda adalah komponen elektronik yang memungkinkan arus listrik mengalir hanya dalam satu arah...",
+    description: "Dioda adalah komponen elektronik yang memungkinkan arus listrik mengalir hanya dalam satu arah.",
   },
   {
     targetIndex: 4,
     modelPath: "/assets/models/transistor.glb",
     title: "Transistor",
-    description: "Transistor adalah komponen semikonduktor yang digunakan untuk memperkuat atau mengalihkan sinyal elektronik...",
+    description: "Transistor adalah komponen semikonduktor yang digunakan untuk memperkuat atau mengalihkan sinyal elektronik.",
   },
   {
     targetIndex: 5,
     modelPath: "/assets/models/integrated_circuit.glb",
     title: "IC (Integrated Circuit)",
-    description: "IC adalah rangkaian elektronik miniatur yang menggabungkan banyak komponen seperti transistor, resistor, dan kapasitor dalam satu chip...",
+    description: "IC adalah rangkaian elektronik miniatur yang menggabungkan banyak komponen dalam satu chip.",
   },
 ];
 
 export default function ARViewer() {
   const containerRef = useRef(null);
+  const mindarRef = useRef(null);
+  const clockRef = useRef(new THREE.Clock());
+  const mixersRef = useRef([]);
+  const animationLoopIdRef = useRef(null);
+
   const [activeContent, setActiveContent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [cameraStatus, setCameraStatus] = useState("Menginisialisasi kamera...");
+  const [cameraStatus, setCameraStatus] = useState("Menginisialisasi...");
   const [cameraMode, setCameraMode] = useState("environment");
   const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
 
-  useEffect(() => {
-    let mindarThree;
-    let mixers = [];
-    let animationLoopId;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+  useEffect(() => {
     const startAR = async () => {
       try {
         setIsLoading(true);
-        setCameraStatus("Memuat library AR...");
+        setError(null);
 
         if (!window.MINDAR) {
-          throw new Error("MindAR library belum dimuat");
+          throw new Error("MindAR library tidak ditemukan. Pastikan script sudah di-load.");
         }
 
-        setCameraStatus("Menyiapkan kamera...");
+        if (!containerRef.current) {
+          throw new Error("Container tidak ditemukan.");
+        }
 
-        // Konfigurasi kamera berdasarkan mode
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: cameraMode },
+            });
+            // Jangan stop track, biarkan MindAR yang handle
+            // stream.getTracks().forEach((track) => track.stop())
+          } catch (err) {
+            throw new Error("Izin akses kamera ditolak. Silakan berikan izin di pengaturan browser.");
+          }
+        }
+
         const config = {
           container: containerRef.current,
           imageTargetSrc: "/assets/markers/targets.mind",
-          uiScanning: "yes",
+          uiScanning: "no",
           uiLoading: "yes",
         };
 
-        // Tambahkan preferensi kamera untuk mobile
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          // Default ke kamera belakang untuk HP
-          config.cameraParams = {
-            facingMode: cameraMode,
-          };
+          config.cameraParams = { facingMode: cameraMode };
         }
 
-        mindarThree = new window.MINDAR.IMAGE.MindARThree(config);
+        const mindarThree = new window.MINDAR.IMAGE.MindARThree(config);
+        mindarRef.current = mindarThree;
 
         const { renderer, scene, camera } = mindarThree;
+
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.setClearColor(0x000000, 0);
+        renderer.alpha = true;
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        dirLight.position.set(5, 10, 7.5);
+        dirLight.castShadow = true;
+        scene.add(ambientLight, dirLight);
+
         const gltfLoader = new GLTFLoader();
 
-        // Optimasi untuk mobile
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        directionalLight.position.set(10, 10, 5);
-        scene.add(directionalLight);
-
-        const pointLight = new THREE.PointLight(0xffffff, 1.0);
-        pointLight.position.set(0, 5, 5);
-        scene.add(pointLight);
-
-        setCameraStatus("Memuat model 3D...");
-
-        // 🔑 Buat anchor untuk setiap target
         arContent.forEach((content) => {
-          if (content.targetIndex === undefined || !content.modelPath) {
-            console.warn("Melewatkan item arContent yang tidak lengkap:", content);
-            return; 
-          }
+          if (content.targetIndex === undefined || !content.modelPath) return;
+
           const anchor = mindarThree.addAnchor(content.targetIndex);
 
           gltfLoader.load(
             content.modelPath,
             (gltf) => {
-              const model = gltf.scene;
-              model.scale.set(0.3, 0.3, 0.3);
-              model.position.set(0, 0.1, 0);
-              model.rotation.set(0, 0, 0);
+              try {
+                const model = gltf.scene;
 
-              model.traverse((child) => {
-                if (child.isMesh) {
-                  child.castShadow = true;
-                  child.receiveShadow = true;
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+
+                // Center model ke origin
+                model.position.sub(center);
+
+                // Scale untuk ukuran yang cocok
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 1.5 / maxDim;
+                model.scale.set(scale, scale, scale);
+
+                // Posisi di tengah marker dengan sedikit offset ke atas
+                model.position.y += 0.3;
+
+                model.castShadow = true;
+                model.receiveShadow = true;
+                anchor.group.add(model);
+
+                if (gltf.animations && gltf.animations.length > 0) {
+                  const mixer = new THREE.AnimationMixer(model);
+                  gltf.animations.forEach((clip) => {
+                    mixer.clipAction(clip).play();
+                  });
+                  mixersRef.current.push(mixer);
                 }
-              });
-
-              anchor.group.add(model);
-              console.log("Model loaded successfully");
-
-              if (gltf.animations.length > 0) {
-                const mixer = new THREE.AnimationMixer(model);
-                gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
-                mixers.push(mixer);
+              } catch (err) {
+                console.error(`Error saat menambah model ${content.title}:`, err);
               }
             },
-            (progress) => {
-              const percent = ((progress.loaded / progress.total) * 100).toFixed(0);
-              setCameraStatus(`Memuat model... ${percent}%`);
-            },
-            (error) => {
-              console.error("Error loading model:", error);
-              setError(`Gagal memuat model. Pastikan file ada di: ${content.modelPath}`);
+            undefined,
+            (err) => {
+              console.error(`Model load error untuk ${content.title}:`, err);
+              setCameraStatus(`Error loading: ${content.title}`);
             }
           );
 
           anchor.onTargetFound = () => {
-            console.log("Target found!");
+            console.log(`Target ditemukan: ${content.title}`);
             setActiveContent(content);
-            setCameraStatus("Target ditemukan!");
+            setCameraStatus(`✓ Menampilkan: ${content.title}`);
           };
 
           anchor.onTargetLost = () => {
-            console.log("Target lost!");
+            console.log("Target hilang");
             setActiveContent(null);
-            setCameraStatus("Cari marker target...");
+            setCameraStatus("Mencari Marker...");
           };
         });
 
-        setCameraStatus("Memulai kamera...");
         await mindarThree.start();
+        console.log("[v0] MindAR started successfully");
 
         setIsLoading(false);
-        setCameraStatus(`Kamera ${cameraMode === "environment" ? "Belakang" : "Depan"} aktif`);
         setIsSwitchingCamera(false);
+        setCameraStatus("✓ Siap! Arahkan ke marker.");
 
-        // Animation loop
-        const animate = (time) => {
-          if (!mindarThree) return;
+        const animate = () => {
+          if (!mindarRef.current) return;
 
-          const delta = time * 0.001;
-          mixers.forEach((m) => m.update(delta));
+          const delta = clockRef.current.getDelta();
+          mixersRef.current.forEach((mixer) => {
+            mixer.update(delta);
+          });
+
           renderer.render(scene, camera);
-          animationLoopId = requestAnimationFrame(animate);
+          animationLoopIdRef.current = requestAnimationFrame(animate);
         };
 
-        animationLoopId = requestAnimationFrame(animate);
+        animate();
       } catch (err) {
-        console.error("Error starting AR:", err);
-        setError(`Error: ${err.message}. Pastikan mengakses via HTTPS dan izinkan kamera.`);
+        console.error("[v0] AR Error:", err);
+        setError(err.message || "Gagal mengakses kamera. Pastikan izin diberikan.");
         setIsLoading(false);
-        setIsSwitchingCamera(false);
       }
     };
 
     startAR();
 
     return () => {
-      if (animationLoopId) {
-        cancelAnimationFrame(animationLoopId);
+      if (animationLoopIdRef.current) {
+        cancelAnimationFrame(animationLoopIdRef.current);
       }
-      if (mindarThree && mindarThree.controller) {
-        mindarThree.stop();
+      if (mindarRef.current) {
+        mindarRef.current.stop();
+        mindarRef.current = null;
       }
+      mixersRef.current = [];
     };
-  }, [cameraMode]); // Restart ketika cameraMode berubah
+  }, [cameraMode]);
 
-  // Fungsi untuk switch kamera
-  const switchCamera = () => {
+  const handleSwitchCamera = () => {
     setIsSwitchingCamera(true);
-    setCameraStatus("Mengganti kamera...");
-
-    // Toggle antara depan dan belakang
-    setCameraMode((prevMode) => (prevMode === "environment" ? "user" : "environment"));
+    setCameraMode((prev) => (prev === "environment" ? "user" : "environment"));
   };
 
-  const restartAR = () => {
-    window.location.reload();
-  };
-
-  // Deteksi apakah device mobile
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const handleRestart = () => window.location.reload();
 
   return (
-    <div className="relative w-screen h-screen bg-black">
-      <div ref={containerRef} className="absolute top-0 left-0 w-full h-full z-0" />
+    <main className="relative w-full h-screen bg-black overflow-hidden">
+      <div ref={containerRef} className="absolute inset-0 w-full h-full z-0" style={{ width: "100vw", height: "100vh" }} />
 
-      {/* Loading Overlay */}
-      {(isLoading || isSwitchingCamera) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-90 z-10">
-          <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
-            <p className="text-lg font-semibold">{cameraStatus}</p>
-            <p className="text-sm mt-2 text-gray-300">{isSwitchingCamera ? "Mengganti kamera..." : "Memuat pengalaman AR..."}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Error Overlay */}
-      {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-red-900 bg-opacity-90 z-20">
-          <div className="text-white text-center p-6 max-w-md">
-            <div className="text-4xl mb-4">📱</div>
-            <h3 className="text-xl font-bold mb-2">Kamera Tidak Dapat Diakses</h3>
-            <p className="mb-4 text-sm">{error}</p>
-            <div className="text-left text-sm bg-black bg-opacity-50 p-3 rounded mb-4">
-              <p className="font-semibold">Solusi:</p>
-              <p>• Gunakan HTTPS</p>
-              <p>• Izinkan akses kamera</p>
-              <p>• Refresh halaman</p>
-              {!isMobile && <p>• Gunakan perangkat mobile untuk pengalaman terbaik</p>}
-            </div>
-            <button onClick={restartAR} className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors mr-2">
-              Coba Lagi
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Status Indicator */}
-      {cameraStatus && !isLoading && !error && !isSwitchingCamera && <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm">{cameraStatus}</div>}
-
-      {/* Camera Switch Button - Hanya tampil di mobile dan ketika tidak loading */}
-      {isMobile && !isLoading && !error && !isSwitchingCamera && (
-        <button
-          onClick={switchCamera}
-          className="absolute top-4 right-4 z-10 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all backdrop-blur-sm"
-          title={`Switch ke Kamera ${cameraMode === "environment" ? "Depan" : "Belakang"}`}
-        >
-          <div className="flex items-center justify-center">
-            {cameraMode === "environment" ? (
-              // Icon kamera depan (selfie)
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-                <path d="M2 16V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            ) : (
-              // Icon kamera belakang
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2" />
-                <path d="M2 12h4l2-3 2 3 2-3 2 3 2-3 2 3h4" />
-                <circle cx="12" cy="12" r="1" />
-              </svg>
-            )}
-          </div>
-          <span className="text-xs mt-1 block">{cameraMode === "environment" ? "Depan" : "Belakang"}</span>
-        </button>
-      )}
-
-      {/* Camera Mode Indicator */}
-      {isMobile && !isLoading && !error && !isSwitchingCamera && <div className="absolute top-20 right-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-xs">Kamera: {cameraMode === "environment" ? "Belakang" : "Depan"}</div>}
+      {/* Overlay UI */}
+      <AROverlay isLoading={isLoading} error={error} cameraStatus={cameraStatus} cameraMode={cameraMode} isSwitchingCamera={isSwitchingCamera} isMobile={isMobile} onRestart={handleRestart} onSwitchCamera={handleSwitchCamera} />
 
       {/* Info Card */}
-      {activeContent && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm z-10 bg-white p-4 rounded-lg shadow-lg border-2 border-green-500">
-          <h3 className="font-bold text-lg mb-2 text-green-700">{activeContent.title}</h3>
-          <p className="text-gray-800">{activeContent.description}</p>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {!isLoading && !error && !isSwitchingCamera && (
-        <div className="absolute top-16 left-4 z-10">
-          <div className="bg-black bg-opacity-50 text-white px-3 py-1 rounded text-xs">Device: {isMobile ? "Mobile" : "Desktop"}</div>
-        </div>
-      )}
-
-      {/* Restart Button */}
-      {!isLoading && !error && !isSwitchingCamera && (
-        <button onClick={restartAR} className="absolute bottom-4 right-4 z-10 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all backdrop-blur-sm" title="Restart AR">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>
-        </button>
-      )}
-    </div>
+      {activeContent && <InfoCard title={activeContent.title} description={activeContent.description} />}
+    </main>
   );
 }

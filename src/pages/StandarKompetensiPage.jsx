@@ -14,9 +14,9 @@ export default function StandarKompetensiPage() {
           <FaBars />
         </button>
         <h1 className="text-lg font-semibold text-center">
-          STANDAR KOMPETENSI
+          Capaian Pembelajaran &
           <br />
-          KOMPETENSI DASAR
+          Tujuan Pembelajaran
         </h1>
         <div className="bg-orange-500 p-2 rounded-md">
           <FaClipboardList size={24} />
@@ -25,21 +25,17 @@ export default function StandarKompetensiPage() {
 
       {/* Konten Utama */}
       <main className="p-4 flex-grow">
-        <ContentCard title="STANDAR KOMPETENSI">
-          <p>Memahami Dasar-Dasar Elektronika</p>
-        </ContentCard>
-
-        <ContentCard title="KOMPETENSI DASAR">
-          <ol className="list-decimal list-inside">
-            <li>Memahami simbol komponen elektronika</li>
-            <li>Memahami sifat-sifat komponen elektronika</li>
-          </ol>
+        <ContentCard title="CAPAIAN PEMBELAJARAN">
+          <p>Peserta memahami didik mampu komponen elektronika pasif dan aktif, membaca nilai komponen sesuai kodenya, mengenal hukum elektronika dasar (hukum Ohm - Kirchoff, dll)</p>
         </ContentCard>
 
         <ContentCard title="TUJUAN PEMBELAJARAN">
           <ol className="list-decimal list-inside">
-            <li>Mengenali dan memahami simbol berbagai macam komponen elektronika aktif dan pasif</li>
-            <li>Memahami sifat-sifat komponen elektronika aktif dan pasif</li>
+            <li>Memahami jenis, bentuk/kemasan karakteristik komponen elektronika pasif yaitu: RLC (Resistor, Induktor dan Capasitor)</li>
+            <li>Memahami jenis, bentuk, karakteristik, konfigurasi komponen elektronika aktif yaitu: Diode, Transistor dan IC</li>
+            <li>Memahami pembacaan kode nilai atau system kode komponen pasif dan aktif sesuai kode standar</li>
+            <li>Mengevaluasi penerapan komponen pasif dan aktif dalam rangkaian elektronika DC sederhana</li>
+            <li>Mengevaluasi penerapan komponen pasif dan aktif dalam rangkaian elektronika AC sederhana </li>
           </ol>
         </ContentCard>
       </main>
