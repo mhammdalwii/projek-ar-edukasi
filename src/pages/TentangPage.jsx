@@ -24,12 +24,12 @@ export default function TentangPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <ProfileCard name="Nia Dahniar" role="Pengembang" nim="210206500009" email="niadahniar988@gmail.com" photoUrl="/assets/images/niar.jpg" />
 
-          <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="[NIP/NIDN Pembimbing]" photoUrl="/assets/images/pembimbing1.jpg" />
+          <ProfileCard name="Dr. Ir. Edy Sabara, M.Si., IPM." role="Pembimbing 1" nim="196611 24199103 1 002" photoUrl="/assets/images/pembimbing1.jpg" />
 
           <ProfileCard
             name="Mustamin, S.Pd., M.T., M.Pd."
             role="Pembimbing 2"
-            nim="belum ada
+            nim="19710618 200003 1 002
           "
             photoUrl="/assets/images/pembimbing2.jpg"
           />

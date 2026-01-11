@@ -5,7 +5,7 @@ export default function MainMenuGrid() {
   const navigate = useNavigate();
 
   const menuItems = [
-    { text: "Standar Kompetensi...", icon: FaClipboardList, color: "bg-orange-500", path: "/standar-kompetensi" },
+    { text: "Capaian Pembelajaran", icon: FaClipboardList, color: "bg-orange-500", path: "/standar-kompetensi" },
     { text: "Augmented Reality Elektronika", icon: FaMicrochip, color: "bg-fuchsia-500", path: "/augmented-reality" },
     { text: "Materi Pembelajaran", icon: FaBook, color: "bg-red-600", path: "/materi" },
     { text: "Soal", icon: FaQuestionCircle, color: "bg-pink-400", path: "/soal" },
