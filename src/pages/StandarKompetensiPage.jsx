@@ -26,7 +26,7 @@ export default function StandarKompetensiPage() {
       {/* Konten Utama */}
       <main className="p-4 flex-grow">
         <ContentCard title="CAPAIAN PEMBELAJARAN">
-          <p>Peserta memahami didik mampu komponen elektronika pasif dan aktif, membaca nilai komponen sesuai kodenya, mengenal hukum elektronika dasar (hukum Ohm - Kirchoff, dll)</p>
+          <p>Peserta didik mampu memahami komponen elektronika pasif dan aktif, membaca nilai komponen sesuai kodenya, mengenal hukum elektronika dasar (hukum Ohm - Kirchoff, dll)</p>
         </ContentCard>
 
         <ContentCard title="TUJUAN PEMBELAJARAN">
